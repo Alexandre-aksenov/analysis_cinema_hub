@@ -24,3 +24,11 @@ FROM "movies";
 SELECT
 	*
 FROM "movies";
+
+-- Q1 without attempt to modify the table
+select 
+	coalesce(m.movie_id, 0), 
+	m.*
+from movies m 
+where m.movie_id is null
+-- -> nothing, as all movies had a rating in initial data.
