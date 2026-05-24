@@ -34,15 +34,17 @@ where m.movie_id is null
 -- -> nothing, as all movies had a rating in initial data.
 
 -- Q2. название фильма и округленное вверх значение рейтинга до ближайшего целого числа.
+--
 select
 	title,
 	ceil(rating) as ceil_rating
 from 
 	movies;
 -- 30 x 2
--- -> res/tile_rating.csv
+-- -> res/title_rating.csv
 
 -- Q3. The list of clients, who registered last month.
+--
 
 -- First interpretation of the question: during the last month until today (2026)
 select 
@@ -88,3 +90,27 @@ where dur_before_latest < interval '1 month'
 ;
 -- -> 1 row x 6 cols 
 -- id=12 , Mila Harris, registration date = latest = '2022-12-20'
+
+
+-- Q4. количество дней, в течение которых каждый клиент держал у себя фильм.
+--
+-- select * from rentals;
+
+select 
+	customer_id,
+	SUM(return_date - rental_date) over (partition by customer_id) as lending_time
+from rentals;
+-- -> column of 4 (implicitly, for now, days).
+-- to-MAKE EXPLICIT
+
+
+-- запрос, который выводит название фильма в верхнем регистре.
+--
+select 
+	UPPER(m.title) as TITLE
+from
+	movies m;
+-- 30 x 1
+-- -> res/TITLE.csv
+-- (the column's name is converted to "title", TOCHECK whether this is proper to SQL)
+
