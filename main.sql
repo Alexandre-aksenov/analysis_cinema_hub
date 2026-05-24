@@ -3,35 +3,63 @@ SELECT
 	*
 FROM "movies";
 
--- запрос, который выводит список фильмов, где рейтинг является NULL, и заменяет NULL на значение 0.
-SELECT
-	*
-FROM "movies"
-WHERE
-	rating is null;
--- -> nothing. Replacement shout have no effect.	
-	
--- TOCHECK (on an auxiliary table "movies_with_null"): заменяет NULL на 0
-update "movies"
-set rating = 0
-where rating is null;
-
-SELECT
-	*
-FROM "movies";
-
--- table afterwards
-SELECT
-	*
-FROM "movies";
-
--- Q1 without attempt to modify the table
+-- Q1. запрос, который выводит список фильмов, где рейтинг является NULL, и заменяет NULL на значение 0.
+-- 
 select 
-	coalesce(m.movie_id, 0), 
-	m.*
+ 	movie_id,
+	title,
+	release_year,
+	genre,
+	coalesce(m.rating, 0) as rating_not_null,
+	duration,
+	description,
+	additional_info
 from movies m 
-where m.movie_id is null
--- -> nothing, as all movies had a rating in initial data.
+where m.rating is null
+;
+-- -> nothing, for all movies have a rating in initial data.
+
+-- Auxiliary table for testing the query above. All "low" ratings (< 8) are replaced with nulls
+select
+	movie_id,
+	title,
+	release_year,
+	genre,
+	case when rating < 8 then null else rating  end as rating,
+	duration,
+	description,
+	additional_info
+from movies;
+-- 30 x 8 like the original table "movies".
+-- 3 nulls appear in the new column "rating"
+-- -> res/auxiliary_movies.csv
+
+-- Reproduce the SELECT part of the first query on the new table.
+-- Selects low-rating movies, their rating being replaced by 0.
+select 
+	movie_id,
+	title,
+	release_year,
+	genre,
+	coalesce(m.rating, 0) as rating_not_null, 
+	duration,
+	description,
+	additional_info
+from (select
+	movie_id,
+	title,
+	release_year,
+	genre,
+	case when rating < 8 then null else rating  end as rating,
+	duration,
+	description,
+	additional_info
+from movies) m
+where m.rating is null
+;
+-- 3 rows, null ratings are replaced by 0 as expected.
+-- -> res/low_rating_movies.csv
+
 
 -- Q2. название фильма и округленное вверх значение рейтинга до ближайшего целого числа.
 --
@@ -56,8 +84,6 @@ from customers c
 where c.registration_date between now() - interval '1 month' and now() 
 ;
 -- -> nothing, which is expected: all data in the table is historical, the Database was assembled in 2022.
-
-
 
 -- Промежуточная таблица: вывести данные одного пользователя + сколько времени прошло от его регистрации до последней
 select 
@@ -89,30 +115,27 @@ from (select
 where dur_before_latest < interval '1 month'
 ;
 -- -> 1 row x 6 cols 
--- id=12 , Mila Harris, registration date = latest = '2022-12-20'
+-- -> id=12 , Mila Harris, registration date = latest = '2022-12-20'
 
 
 -- Q4. количество дней, в течение которых каждый клиент держал у себя фильм.
---
--- select * from rentals;
-
 select 
 	customer_id,
-	SUM(return_date - rental_date) over (partition by customer_id) as lending_time
+	SUM(return_date - rental_date) over (partition by customer_id) as lending_time_days
 from rentals;
--- -> column of 4 (implicitly, for now, days).
--- to-MAKE EXPLICIT
+-- -> column with all values equal to 4 (4 days, specifically in PostgreSQL:
+-- https://wiki.postgresql.org/wiki/Working_with_Dates_and_Times_in_PostgreSQL#1._The_difference_between_two_DATES_is_always_an_INTEGER,_representing_the_number_of_DAYS_difference 
+-- ).
 
 
 -- Q5.запрос, который выводит название фильма в верхнем регистре.
 --
 select 
-	UPPER(m.title) as TITLE
+	UPPER(m.title) as title_upper
 from
 	movies m;
 -- 30 x 1
 -- -> res/TITLE.csv
--- (the column's name is converted to "title", TOCHECK whether this is proper to SQL)
 
 
 -- Q6. первые 50 символов описания фильма. 
