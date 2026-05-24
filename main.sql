@@ -104,7 +104,7 @@ from rentals;
 -- to-MAKE EXPLICIT
 
 
--- запрос, который выводит название фильма в верхнем регистре.
+-- Q5.запрос, который выводит название фильма в верхнем регистре.
 --
 select 
 	UPPER(m.title) as TITLE
@@ -113,4 +113,25 @@ from
 -- 30 x 1
 -- -> res/TITLE.csv
 -- (the column's name is converted to "title", TOCHECK whether this is proper to SQL)
+
+
+-- Q6. первые 50 символов описания фильма. 
+--
+select 
+	left(m.description, 50) as start_descr
+from
+	movies m;
+-- 30 x 1
+
+
+-- Q7. жанр и общее количество фильмов в каждом жанре.
+--
+select genre,
+     count(*)
+from movies
+group by genre
+order by genre
+;
+-- 10 x 2
+-- -> genre_count.csv
 
