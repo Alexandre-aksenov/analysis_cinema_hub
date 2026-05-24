@@ -135,3 +135,37 @@ order by genre
 -- 10 x 2
 -- -> genre_count.csv
 
+-- Q8. название фильма, его рейтинг и место в рейтинге по убыванию рейтинга
+--
+select 
+	title,
+	rating,
+	row_number() over (order by m.rating desc, title) as place
+from movies m
+;
+-- 30 x 3
+-- -> movies_by_rating.csv
+
+
+-- Q9. название фильма, его рейтинг и рейтинг предыдущего фильма в списке по убыванию рейтинга.
+--
+select 
+	title,
+	rating,
+	lag(rating) over (order by m.rating desc, title) as prev_rating
+from movies m
+order by m.rating desc, title
+;
+-- 30 x 3
+-- -> title_rating_previous.csv
+
+-- Q10. для каждого жанра выводит средний рейтинг фильмов в этом жанре, округленный до двух знаков после запятой.
+--
+select genre,
+     round(avg(rating), 2) as avg_rating
+from movies
+group by genre
+order by genre
+;
+-- 10 x 2
+-- -> genres_avg_rating.csv
