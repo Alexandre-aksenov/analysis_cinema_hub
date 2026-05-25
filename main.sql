@@ -1,4 +1,4 @@
--- Q1. запрос, который выводит список фильмов, где рейтинг является NULL, и заменяет NULL на значение 0.
+-- Q1. Select the movies, where rating is NULL, then replace NULL by 0.
 -- 
 select 
  	movie_id,
@@ -14,7 +14,8 @@ where m.rating is null
 ;
 -- -> nothing, for all movies have a rating in initial data.
 
--- Auxiliary table for testing the query above. All "low" ratings (< 8) are replaced with nulls
+-- To test the correctness of the query above, we make an auxiliary table. 
+-- All "low" ratings (< 8) are replaced with nulls.
 select
 	movie_id,
 	title,
@@ -56,7 +57,7 @@ where m.rating is null
 -- -> res/low_rating_movies.csv
 
 
--- Q2. название фильма и округленное вверх значение рейтинга до ближайшего целого числа.
+-- Q2. Names of movies and the rounded-up (to the closest integer) rating .
 --
 select
 	title,
@@ -66,8 +67,9 @@ from
 -- 30 x 2
 -- -> res/title_rating.csv
 
+
 -- Q3. The list of clients, who registered last month.
---
+-- Two interpretations are implemented.
 
 -- First interpretation of the question: during the last month until today (2026)
 select 
@@ -113,7 +115,7 @@ where dur_before_latest < interval '1 month'
 -- -> id=12 , Mila Harris, registration date = latest = '2022-12-20'
 
 
--- Q4. количество дней, в течение которых каждый клиент держал у себя фильм.
+-- Q4. Number of days, when each client held a movie.
 select 
 	customer_id,
 	SUM(return_date - rental_date) over (partition by customer_id) as lending_time_days
@@ -123,7 +125,7 @@ from rentals;
 -- ).
 
 
--- Q5.запрос, который выводит название фильма в верхнем регистре.
+-- Q5. Request, which produces the movie's name in uppercase.
 --
 select 
 	UPPER(m.title) as title_upper
@@ -133,7 +135,7 @@ from
 -- -> res/TITLE.csv
 
 
--- Q6. первые 50 символов описания фильма. 
+-- Q6. Movie's descrition restricted to the 50 initial symbols. 
 --
 select 
 	left(m.description, 50) as start_descr
@@ -142,7 +144,7 @@ from
 -- 30 x 1
 
 
--- Q7. жанр и общее количество фильмов в каждом жанре.
+-- Q7. Genres and the number of movies in each of them.
 --
 select genre,
      count(*)
@@ -153,7 +155,7 @@ order by genre
 -- 10 x 2
 -- -> genre_count.csv
 
--- Q8. название фильма, его рейтинг и место в рейтинге по убыванию рейтинга
+-- Q8. Movie's name, rating and the rank by rating.
 --
 select 
 	title,
@@ -165,7 +167,7 @@ from movies m
 -- -> movies_by_rating.csv
 
 
--- Q9. название фильма, его рейтинг и рейтинг предыдущего фильма в списке по убыванию рейтинга.
+-- Q9. Movie's name, rating and the rating of the preceding movie (ordered by decreasing ratings).
 --
 select 
 	title,
@@ -177,7 +179,7 @@ order by m.rating desc, title
 -- 30 x 3
 -- -> title_rating_previous.csv
 
--- Q10. для каждого жанра выводит средний рейтинг фильмов в этом жанре, округленный до двух знаков после запятой.
+-- Q10. Genres and the mean rating in the genre, rounded to two decimal places.
 --
 select genre,
      round(avg(rating), 2) as avg_rating
@@ -187,3 +189,4 @@ order by genre
 ;
 -- 10 x 2
 -- -> genres_avg_rating.csv
+
