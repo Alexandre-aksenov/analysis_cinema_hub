@@ -82,7 +82,8 @@ where c.registration_date between now() - interval '1 month' and now()
 ;
 -- -> nothing, which is expected: all data in the table is historical, the Database was assembled in 2022.
 
--- Промежуточная таблица: вывести данные одного пользователя + сколько времени прошло от его регистрации до последней
+-- Second interpretation of the question: during the last month until the end of recording.
+-- Auxiliary table: select each user's data + the time from their registation to the latest.
 select 
 	customer_id,
 	first_name,
@@ -92,6 +93,7 @@ select
 	age(MAX(registration_date) over (), registration_date) as dur_before_latest
 from customers c
 ;
+-- -> clients_duration_before_latest.csv
 
 -- Query for the 2nd interpretation
 select
