@@ -1,4 +1,0 @@
-"movie_id","title","release_year","genre","rating_replaced_by_zero","duration","description","additional_info"
-4,Avatar,2009,Sci-Fi,0,162,A paraplegic Marine dispatched to Pandora on a unique mission.,"{""awards"": [""Oscar""], ""budget"": 237000000, ""director"": ""James Cameron"", ""languages"": [""English"", ""Spanish""], ""box_office"": 2847246203}"
-6,Titanic,1997,Romance,0,195,A seventeen-year-old aristocrat falls in love with a kind but poor artist.,"{""awards"": [""Oscar"", ""Golden Globe""], ""budget"": 200000000, ""director"": ""James Cameron"", ""languages"": [""English"", ""French""], ""box_office"": 2201647264}"
-28,The Social Network,2010,Biography,0,120,The story of Facebook.,"{""awards"": [""Oscar""], ""budget"": 40000000, ""director"": ""David Fincher"", ""languages"": [""English""], ""box_office"": 224920315}"
