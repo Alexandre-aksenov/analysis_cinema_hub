@@ -1,8 +1,3 @@
--- table before replacement
-SELECT
-	*
-FROM "movies";
-
 -- Q1. запрос, который выводит список фильмов, где рейтинг является NULL, и заменяет NULL на значение 0.
 -- 
 select 
@@ -10,7 +5,7 @@ select
 	title,
 	release_year,
 	genre,
-	coalesce(m.rating, 0) as rating_not_null,
+	coalesce(m.rating, 0) as rating_replaced_by_zero,
 	duration,
 	description,
 	additional_info
@@ -41,7 +36,7 @@ select
 	title,
 	release_year,
 	genre,
-	coalesce(m.rating, 0) as rating_not_null, 
+	coalesce(m.rating, 0) as rating_replaced_by_zero, 
 	duration,
 	description,
 	additional_info
@@ -57,7 +52,7 @@ from (select
 from movies) m
 where m.rating is null
 ;
--- 3 rows, null ratings are replaced by 0 as expected.
+-- 3 rows x 8 columns, null ratings in the auxiliary table are replaced by 0 as expected.
 -- -> res/low_rating_movies.csv
 
 
