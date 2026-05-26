@@ -1,3 +1,6 @@
+SELECT version();
+-- PostgreSQL 17.9 (Debian 17.9-1.pgdg13+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+
 -- Q3. Names of movies, whose length is above the mean length of all movies in the data.
 
 -- Auxiliary table: add a column for the mean duration
