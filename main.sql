@@ -57,7 +57,7 @@ order by customer_id
 ;
 -- 31 (clients) x 5
 -- Решение работает, но кажется неоптимальным: если удастся избавиться от промежуточной таблицы,
--- то "движок" Постгрес будет знать, что есть только одно имя на данный id.
+-- то POstgres будет знать, что есть только одно имя на данный id.
 
 -- Кроме того, имеет смысл добавить тестовую таблицу "orders2",
 -- в которой добавлен 2ой заказ от одного из клиентов.
@@ -96,7 +96,50 @@ select
 from actors a
 order by "type", last_name 
 ;
--- This operator "union" filters repetition of clients or  repetition of actors.
 -- 61 x 3
 -- -> people.csv
+-- This operator "union" filters repetition of clients or  repetition of actors. This is tested on small data 
 
+
+-- Q4. количество аренд для каждого жанра.
+-- Вывести жанры с общим количеством аренд, отсортированных по количеству аренд в порядке убывания
+--
+
+-- intermediate JOIN, for testing
+select 
+	m.movie_id,
+	m.genre 
+from movies m 
+inner join rentals r on m.movie_id = r.movie_id
+;
+
+
+-- Full query.
+with id_genre as (
+		select 
+		m.movie_id,
+		m.genre 
+	from movies m 
+	inner join rentals r on m.movie_id = r.movie_id
+)
+select
+	genre,
+    count(*)
+from id_genre
+group by genre
+order by count desc
+;
+-- 10 (genres) x 2
+-- -> popularity_by_genre.csv
+
+-- As our data contains one rental per movie, it cannot check whether the join was correct.
+-- The answer happens to be the same as without taking rentals into account here:
+select
+	genre,
+    count(*)
+from movies
+group by genre
+order by count desc
+;
+
+-- The testing example test_inner_join.sql runs on small (but varied) testing data.
