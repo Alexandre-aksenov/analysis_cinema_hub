@@ -12,7 +12,7 @@ All tables are in the third Normal Form.
 
 ## Queries
 
-The main script <code>main.sql</code> contains the queries and summary of the answers.
+The main scripts <code>main.sql</code>, <code>main1.sql</code> contains the queries and summary of the answers.
 
 The RDBMS used: PostgreSQL 17.
 
@@ -22,7 +22,7 @@ The results (whenever they are non-trivial) are exported to the folder <code>res
 
 ## Possible improvements.
 
-1. The nature of the particular dataset does not call (therefore, does not test) some features provided in the queries. Although and additional table has been created for testing the management of Nulls in Question 1, an analogous procedure is possible  for testing the summation of durations of orders by the same client in Question 4.
+1. The nature of the particular dataset does not call (therefore, does not test) some features provided in the queries. Although an additional table has been created for testing the management of Nulls in Question 1, an analogous procedure is possible  for testing the summation of durations of orders by the same client in Question 4.
 
 2. Again, in Question 4, the number of days is produced using a syntax specific to PostgreSQL. A syntax, which makes the conversion to days explicit, would lead to easier reading.
 

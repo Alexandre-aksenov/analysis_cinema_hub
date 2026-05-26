@@ -1,4 +1,5 @@
--- Q3. название фильмов, чья продолжительность больше средней продолжительности всех фильмов в базе данных
+-- Q3. название фильмов, чья продолжительность больше средней продолжительности всех фильмов
+-- в базе данных
 
 -- Auxiliary table: add a column for the mean duration
 select 
@@ -58,3 +59,24 @@ order by customer_id
 -- Решение работает, но кажется неоптимальным: если удастся избавиться от промежуточной таблицы,
 -- то "движок" Постгрес будет знать, что есть только одно имя на данный id.
 
+-- Кроме того, имеет смысл добавить тестовую таблицу "orders2",
+-- в которой добавлен 2ой заказ от одного из клиентов.
+
+
+-- Q1. список фильмов вместе с именами и фамилиями актеров, сыгравших в них.
+-- Отсортируйте результат по названию фильма и фамилии актера.
+
+select
+	m.title,
+	a.first_name as actor_first_name,
+	a.last_name as actor_last_name 
+from movies m
+left join movie_actors ma  on ma.movie_id = m.movie_id
+left join actors a on a.actor_id = ma.actor_id
+order by m.title, a.last_name  
+;
+-- 45 (movies-actors) x 3
+-- Only 16 movies (the first 16 from the table "movies") have actors associated to their title,
+-- but this corresponds to the lack in data: these movies are the ones which appear
+--in the table "movie_actors".
+-- -> names_movies_actors.csv
