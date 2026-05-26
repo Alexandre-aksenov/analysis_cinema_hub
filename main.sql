@@ -1,5 +1,4 @@
--- Q3. название фильмов, чья продолжительность больше средней продолжительности всех фильмов
--- в базе данных
+-- Q3. Names of movies, whose length is above the mean length of all movies in the data.
 
 -- Auxiliary table: add a column for the mean duration
 select 
@@ -25,7 +24,7 @@ where m_avg.duration > m_avg.avg_duration
 -- 15 movies, which represent exactly the half of all movies.
 -- -> movies_longer_than_avg.csv
 
--- Q2. список всех клиентов и, если они совершали аренды, то укажите дату последней аренды.
+-- Q2. List of all clients and the date of last rental if they rented movies indeed.
 --
 
 -- Join "clients" with "orders".
@@ -56,15 +55,16 @@ group by customer_id
 order by customer_id
 ;
 -- 31 (clients) x 5
--- Решение работает, но кажется неоптимальным: если удастся избавиться от промежуточной таблицы,
--- то POstgres будет знать, что есть только одно имя на данный id.
 
--- Кроме того, имеет смысл добавить тестовую таблицу "orders2",
--- в которой добавлен 2ой заказ от одного из клиентов.
+-- This soluition works, but seems suboptimal: if the intermediate query is switched to JOIN,
+-- Postgres may become aware, that each id correspond to a single name, avoiding "string_agg".
+
+-- Moreover, our data contain a single order per client, not allowing to test the correct selection of _latest_ rental.
+-- Test on a tiny dataset may be added to answer this.
 
 
--- Q1. список фильмов вместе с именами и фамилиями актеров, сыгравших в них.
--- Отсортируйте результат по названию фильма и фамилии актера.
+-- Q1. List of movies with the first and last names of actors.
+-- The result is sorted by by the movie's name and the actor's name.
 
 select
 	m.title,
@@ -81,7 +81,7 @@ order by m.title, a.last_name
 --in the table "movie_actors".
 -- -> names_movies_actors.csv
 
--- Q5. список всех уникальных имен актеров и клиентов в одном столбце.
+-- Q5. List of unique уникальных actors' names and clients' names.
 select 
 	c.first_name,
 	c.last_name,
@@ -101,8 +101,8 @@ order by "type", last_name
 -- This operator "union" filters repetition of clients or  repetition of actors. This is tested on small data 
 
 
--- Q4. количество аренд для каждого жанра.
--- Вывести жанры с общим количеством аренд, отсортированных по количеству аренд в порядке убывания
+-- Q4. Number of rents per genre.
+-- The genres together with Number of rents. The table is sorted from the most popular to the least popular genre.
 --
 
 -- intermediate JOIN, for testing
