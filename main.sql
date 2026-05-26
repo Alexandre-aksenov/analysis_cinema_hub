@@ -80,3 +80,23 @@ order by m.title, a.last_name
 -- but this corresponds to the lack in data: these movies are the ones which appear
 --in the table "movie_actors".
 -- -> names_movies_actors.csv
+
+-- Q5. список всех уникальных имен актеров и клиентов в одном столбце.
+select 
+	c.first_name,
+	c.last_name,
+	'client'::VARCHAR(10) as type
+from customers c
+union
+select
+	a.first_name,
+	a.last_name,
+	'actor'::VARCHAR(10) as type
+	-- 'actor' as type : also accepted, but leads to the type VARCHAR(10485760) on my machine
+from actors a
+order by "type", last_name 
+;
+-- This operator "union" filters repetition of clients or  repetition of actors.
+-- 61 x 3
+-- -> people.csv
+
