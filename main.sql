@@ -30,39 +30,22 @@ where m_avg.duration > m_avg.avg_duration
 -- Q2. List of all clients and the date of last rental if they rented movies indeed.
 --
 
--- Join "clients" with "orders".
 select
-	c.*,
-	r.customer_id as rental_cid,
-	r.rental_date 
+	c.customer_id,
+	c.first_name,
+	c.last_name,
+	c.email,
+	c.phone_number,
+	max(r.rental_date) as latest_rental
 from customers c 
-left join rentals r on r.customer_id = c.customer_id 
-;
-
--- Agregate on "client_id": client's data (first), latest rental_date (max)
-select
-	customer_id,
-	string_agg(first_name, ', ' order by first_name) as first_name,
-	string_agg(last_name, ', ' order by first_name) as last_name,
-	string_agg(email, ', ' order by first_name) as email,
-	max(rental_date) as latest_rental
-from (
-	select
-		c.*,
-		r.customer_id as rental_cid,
-		r.rental_date 
-	from customers c 
-	left join rentals r on r.customer_id = c.customer_id
-	)
-group by customer_id
-order by customer_id
+left join rentals r on r.customer_id = c.customer_id
+group by c.customer_id
+order by c.customer_id
 ;
 -- 31 (clients) x 5
+-- -> latest_rentals.csv
 
--- This soluition works, but seems suboptimal: if the intermediate query is switched to JOIN,
--- Postgres may become aware, that each id correspond to a single name, avoiding "string_agg".
-
--- Moreover, our data contain a single order per client, not allowing to test the correct selection of _latest_ rental.
+-- Our data contains a single order per client, not allowing to test the correct selection of _latest_ rental.
 -- Test on a tiny dataset may be added to answer this.
 
 
