@@ -23,16 +23,27 @@ where (m.additional_info -> 'budget')::int > 10^8
 -- -> titles_high_budget.csv
 
 
--- Q5. Average movie budget for each genre, rounded to the closest integer.
-select 
-	m.genre,
-	AVG((m.additional_info -> 'budget')::int)::int 
-from movies m
-group by m.genre
-order by genre 
+-- Q3. For each client, create a JSON-object containing 2 fields:
+-- 		full_name (fulle clienbt's name),
+-- 		contact (email and the phone number).
+-- Show customer_id and the new JSON-object.
+select
+	c.customer_id,
+	json_build_object
+		(
+		'full_name', c.first_name || ' ' || c.last_name ,
+		'contact', json_build_object
+			(
+			'email', c.email,
+			'phone', c.phone_number
+			)
+		) as contact
+from customers c
 ;
--- 10(genres) x 2
--- -> genres_avg_budget.csv
+-- 31 (clients) x 2
+-- -> clients_name_contact.csv
+
+
 
 -- Q4. Add a new genre ""Drama"" to the array of preferred_genres for all customers,
 -- who are sighed in for the newsletter (detected by the key 'newsletter').
@@ -53,6 +64,18 @@ from customers c
 -- -> clients_expanded_preferences.csv
 
 
+-- Q5. Average movie budget for each genre, rounded to the closest integer.
+select 
+	m.genre,
+	AVG((m.additional_info -> 'budget')::int)::int 
+from movies m
+group by m.genre
+order by genre 
+;
+-- 10(genres) x 2
+-- -> genres_avg_budget.csv
+
+
 -- Q6. Customers, whose preferences include the actor ""Leonardo DiCaprio"".
 select 
  	c.first_name,
@@ -71,6 +94,7 @@ from movies m
 order by box_office desc
 ;
 -- > movies_by_box_office.csv
+
 
 -- Q8. Movie title, genre and the number of awards from additional_info.
 select
