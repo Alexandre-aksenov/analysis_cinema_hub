@@ -1,6 +1,8 @@
 SELECT version();
+--"PostgreSQL 17.9 (Debian 17.9-1.pgdg13+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit"
 
--- Q1. Title of movie and the list of available languages.
+
+-- Q1. Title of each movie and the list of available languages.
 select
 	m.title,
 	m.additional_info -> 'languages' as languages
