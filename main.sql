@@ -1,6 +1,6 @@
 SELECT version();
 
--- Q1. название фильма и список языков, на которых доступен фильм.
+-- Q1. Title of movie and the list of available languages.
 select
 	m.title,
 	m.additional_info -> 'languages' as languages
@@ -9,7 +9,7 @@ from movies m
 -- -> 31 (movies) x 2
 -- -> movies_lang.csv
 
--- Q2. список фильмов, бюджет которых превышает 100 миллионов долларов.
+-- Q2. List of movies with budget above 100 million $.
 select
 	m.title,
 	m.additional_info -> 'budget' as budget
@@ -18,22 +18,22 @@ where (m.additional_info -> 'budget')::int > 10^8
 ;
 -- 10(movies) x 2
 -- Execution plan: single row.
--- -> title_high_budget.csv
+-- -> titles_high_budget.csv
 
 
--- Q5. средний бюджет фильмов по жанрам.
+-- Q5. Average movie budget for each genre, rounded to the closest integer.
 select 
 	m.genre,
-	AVG((m.additional_info -> 'budget')::int) 
+	AVG((m.additional_info -> 'budget')::int)::int 
 from movies m
 group by m.genre
 order by genre 
 ;
 -- 10(genres) x 2
+-- -> genres_avg_budget.csv
 
-
--- Q4. добавить новый предпочитаемый жанр ""Drama"" в список preferred_genres для всех клиентов,
--- которые подписаны на рассылку новостей (ключ newsletter имеет значение true).
+-- Q4. Add a new genre ""Drama"" to the array of preferred_genres for all customers,
+-- who are sighed in for the newsletter (detected by the key 'newsletter').
 select 
  	c.first_name, -- for keeping all data from table
  	c.last_name,
@@ -51,7 +51,7 @@ from customers c
 -- -> clients_expanded_preferences.csv
 
 
--- Q6. список клиентов, у которых в preferences указан предпочитаемый актёр ""Leonardo DiCaprio"".
+-- Q6. Customers, whose preferences include the actor ""Leonardo DiCaprio"".
 select 
  	c.first_name,
  	c.last_name
@@ -61,7 +61,7 @@ where c.preferences -> 'preferred_actors' @> '["Leonardo DiCaprio"]'
 -- John Doe
 
 
--- Q7. список фильмов, отсортированных по значению кассовых сборов box_office из поля additional_info в порядке убывания.
+-- Q7. Movies, ordered by their box_office income from the column 'additional_info' in decreasing order.
 select
 	m.title,
 	m.additional_info -> 'box_office' as box_office
@@ -70,7 +70,7 @@ order by box_office desc
 ;
 -- > movies_by_box_office.csv
 
--- Q8. название фильма, его жанр и количество наград (awards) из additional_info.
+-- Q8. Movie title, genre and the number of awards from additional_info.
 select
 	m.title,
 	m.genre,
@@ -81,7 +81,7 @@ order by num_awards desc, m.title
 -- -> movies_awards.csv
 
 
--- Q9. количество фильмов, имеющих более чем одну награду в поле awards внутри additional_info
+-- Q9. Number of movies with >1 award (field 'awards' inside additional_info)
 select
 	count(*)
 from movies m
@@ -90,7 +90,7 @@ where jsonb_array_length(m.additional_info -> 'awards') > 1
 -- -> 6
 
 
--- Q10. удалить ключ preferred_actors из поля preferences для всех клиентов.
+-- Q10. Remove the key 'preferred_actors' from the column 'preferences' for all customers.
 select 
  	c.first_name, -- customer's name
  	c.last_name,
