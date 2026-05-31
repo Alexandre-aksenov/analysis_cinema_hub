@@ -11,6 +11,7 @@ from movies m
 -- -> 31 (movies) x 2
 -- -> movies_lang.csv
 
+
 -- Q2. List of movies with budget above 100 million $.
 select
 	m.title,
@@ -44,7 +45,6 @@ from customers c
 -- -> clients_name_contact.csv
 
 
-
 -- Q4. Add a new genre ""Drama"" to the array of preferred_genres for all customers,
 -- who are sighed in for the newsletter (detected by the key 'newsletter').
 select 
@@ -64,7 +64,7 @@ from customers c
 -- -> clients_expanded_preferences.csv
 
 
--- Q5. Average movie budget for each genre, rounded to the closest integer.
+-- Q5. Average movie budget for each genre, rounded to the nearest integer.
 select 
 	m.genre,
 	AVG((m.additional_info -> 'budget')::int)::int 
@@ -74,6 +74,15 @@ order by genre
 ;
 -- 10(genres) x 2
 -- -> genres_avg_budget.csv
+
+-- Equivalent query, where rounding is clearly indicated:
+select
+	m.genre,
+	ROUND(AVG((additional_info -> 'budget')::int)) AS avg_budget
+FROM movies m
+GROUP BY genre
+ORDER BY genre
+;
 
 
 -- Q6. Customers, whose preferences include the actor ""Leonardo DiCaprio"".
