@@ -12,7 +12,7 @@ All tables are in the third Normal Form.
 
 ## Queries
 
-The main scripts <code>main.sql</code>, <code>main1.sql</code>, <code>main2.sql</code> contain the queries and summary of the answers.
+The main scripts <code>main1.sql</code>, <code>main2.sql</code>, <code>main3.sql</code> contain the queries and summary of the answers.
 
 The RDBMS used: PostgreSQL 17.
 
