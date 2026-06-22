@@ -1,8 +1,8 @@
--- триггер, который при обновлении поля return_date в таблице rentals устанавливает текущую дату, если поле NULL,
--- и оставляет значение без изменений, если оно больше текущей даты
+-- Q8. Trigger, which replaces NULL by the current date at update of the field 'return_date' in table 'rentals'
+-- and leaves the value without change, if it is after the current date.
 
--- Added logic in this version: 
--- keep the date if it's before the current one, raise a warning if it's after.
+-- Added logic in this version:
+-- the trigger keeps the date, which has been entered,  raise a warning if it's before or after the current one.
 
 -- Function
 create or replace function trg_return_default_current()
@@ -28,7 +28,7 @@ $$;
 
 -- trigger
 create trigger set_return_curr_date_as_default
-before insert 
+before update
 on rentals
 for each row
 execute function trg_return_default_current()
