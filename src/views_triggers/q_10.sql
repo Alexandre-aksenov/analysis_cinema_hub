@@ -1,6 +1,5 @@
--- Создайте триггер, который после добавления новой записи в таблицу Movie
--- автоматически будет увеличивать количество фильмов данного жанра в таблице Genre_Statistics.
--- TOADAPT from q4 (counting)
+-- Q10. Trigger, which increments the count of movies of the corresponding genre after each addition to the table "movies".
+-- The counts are recorded in the table  "Genre_Statistics".
 
 -- fn
 create or replace function trg_incement_genre_cnt()
@@ -38,4 +37,4 @@ for each row
 execute function trg_incement_genre_cnt();
 
 -- Test on new tables movies_2, Genre_Statistics_2
--- See: ./src/test_q_10.sql
+-- See: ./src/views_triggers/test_q_10.sql

@@ -1,4 +1,10 @@
 -- 2 additional tables: movies_2, Genre_Statistics_2
+
+drop function if exists trg_incement_genre_cnt_2() CASCADE;
+drop table if exists movies_2;
+drop table if exists Genre_Statistics_2;
+
+
 create table movies_2  (like movies including all);
 create table Genre_Statistics_2
 	(genre VARCHAR(100),
@@ -76,7 +82,3 @@ select * from Genre_Statistics_2;
 -- {the count for 'Sci-Fi' incremented correctly}
 -- {Remark: the genres switched places, but this does not violate specifications, for the order of rows is not specified for this table}
 
-
--- drop function trg_incement_genre_cnt_2() CASCADE;
--- drop table movies_2;
--- drop table Genre_Statistics_2;
