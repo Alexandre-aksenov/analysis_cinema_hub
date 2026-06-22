@@ -1,4 +1,10 @@
 -- Create testing tables customers_2 , Customer_Deletion_Log_2.
+
+drop trigger log_old_customers_2 on customers_2;
+drop table if exists customers_2;
+drop table if exists Customer_Deletion_Log_2;
+drop function if exists trg_old_customers_audit_2();
+
 create table customers_2 (like customers including all);
 
 create table Customer_Deletion_Log_2 (like Customer_Deletion_Log including all);
@@ -56,7 +62,4 @@ select * from Customer_Deletion_Log_2 l;
 -- { The log of deletion has been recorded. }
 
 
--- drop trigger log_old_customers_2 on customers_2;
--- drop table customers_2;
--- drop table Customer_Deletion_Log_2;
--- drop function trg_old_customers_audit_2();
+

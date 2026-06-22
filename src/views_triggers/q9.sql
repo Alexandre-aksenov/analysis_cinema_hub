@@ -1,5 +1,5 @@
--- Создайте триггер, который будет записывать информацию о каждом удалении записи из таблицы Customer
--- в отдельную таблицу Customer_Deletion_Log.
+-- Q9. Create a trigger, which logs information about each row deletion from table 'Customer'
+-- to a new table Customer_Deletion_Log.
 
 -- new table
 -- see: ./src/q9_create_table_log.sql
@@ -30,6 +30,6 @@ execute function trg_old_customers_audit();
 
 
 -- Test on 2 testing tables.
--- see: ./src/q9_test.sql
+-- see: ./src/views_triggers/test_q9.sql
 
 
