@@ -1,4 +1,6 @@
--- триггер, который предотвращает удаление записей о фильмах, если они связаны с таблицей Rental.
+-- Q4. Trigger, which prevents deleting records about movies, which have already been rented.
+-- Added value compared to Foreign Key Constraint (already present in the table 'rentals' in the current scheme):
+-- the custom error message contains the title of the movie.
 
 -- fn for checking whether the attempted delete is used in rentals.
 create or replace function trg_exception_if_linked_rentals()
@@ -18,8 +20,8 @@ begin
 	    if rent_cnt > 0 then 
       		raise exception
         	'Cannot remove the movie % .',
-        	old.title -- rent_cnt 
-        	using errcode = '23503'; -- Same as for Foreign Key Constraint
+        	old.title
+        	using errcode = '23503'; -- Same code as for Foreign Key Constraint
     	end if;
 	
 	end if;
@@ -27,8 +29,7 @@ begin
 	return old;
 end;
 $$;
--- Updated rows: 0. Done 5 , 20/6
--- DROP function trg_exception_if_linked_rentals() CASCADE; 
+-- Updated rows: 0. 
 
 
 CREATE TRIGGER check_not_linked_to_rentals
@@ -40,7 +41,6 @@ execute function trg_exception_if_linked_rentals()
 -- Updated rows: 0
 
 -- Tests.
--- The trigger allows DELETE, as expected in: /src/test_q4_allowed_delete.sql 
--- The trigger forbids DELETE, as expected in: /src/test_q4_forbidden_delete.sql
-
+-- The trigger allows DELETE, as expected, in:  /src/views_triggers/test_q4_allowed_delete.sql 
+-- The trigger forbids DELETE, as expected, in: /src/views_triggers/test_q4_forbidden_delete.sql
 

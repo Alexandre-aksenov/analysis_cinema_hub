@@ -1,5 +1,7 @@
 -- Check that the trigger allows DELETE when it should
 
+drop table if exists movies_2;
+
 create table movies_2 (like movies including all);
 -- This table should have DELETE allowed, for all ids are new.
 
@@ -10,7 +12,7 @@ ON movies_2
 for each row
 execute function trg_exception_if_linked_rentals()
 ;
--- Updated rows: 0. Done test 5, 20/6
+-- Updated rows: 0.
 
 -- add, delete rows
 INSERT INTO movies_2 (title, release_year, genre, rating, duration, description, additional_info) VALUES
@@ -23,7 +25,7 @@ INSERT INTO movies_2 (title, release_year, genre, rating, duration, description,
 
 select * from movies_2 m; 
 -- 2x8
--- movie_id = consecutive ints above 30 , exists on 20/6
+-- movie_id = consecutive ints above 30
 
 delete from movies_2 where release_year= 2008;
 -- Expected: DELETE should work OK here.
@@ -32,4 +34,3 @@ delete from movies_2 where release_year= 2008;
 select * from movies_2 m; 
 -- Just 1 row, with release_year = 2010.
 
--- DROP TABLE movies_2;

@@ -1,4 +1,7 @@
 -- Check that the trigger prevents DELETE when it should
+
+drop table if exists movies_3;
+
 CREATE TABLE movies_3 (
     movie_id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
@@ -10,7 +13,6 @@ CREATE TABLE movies_3 (
     additional_info JSONB
 );
 -- This table will contain movies with id = 1,2,3, ... : same ones as for the original table "movies".
--- DROP TABLE movies_3;
 
 select * from movies_3 m; 
 
@@ -21,7 +23,7 @@ ON movies_3
 for each row
 execute function trg_exception_if_linked_rentals()
 ;
--- Updated rows: 0. Done, test 4, 20/6
+-- Updated rows: 0.
 
 
 -- add 2 rows.
@@ -31,7 +33,7 @@ INSERT INTO movies_3 (title, release_year, genre, rating, duration, description,
 ('The Dark Knight', 2008, 'Action', 9.0, 152, 'Batman battles the Joker in Gotham City.', 
  '{"languages": ["English", "Mandarin"], "budget": 185000000, "box_office": 1005455211, "director": "Christopher Nolan", "awards": ["Oscar", "Golden Globe"]}')
 ;
--- Updated rows: 2. Done 3, 20/6
+-- Updated rows: 2.
 
 select * from movies_3 m; 
 -- 2 rows with movie_id = 1, 2
@@ -53,4 +55,5 @@ delete from movies_3 where release_year= 2008;
 
 
 select * from movies_3 m;
--- Both rows remain
+-- Both rows remain in the table
+
