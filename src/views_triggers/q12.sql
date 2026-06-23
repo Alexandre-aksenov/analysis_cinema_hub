@@ -37,5 +37,5 @@ from CustomerMovieRentalView v_cr
 where date_trunc('month', v_cr.rental_date)::date = '2022-03-01'::date
 ;
 -- 30 (all movies) x 2
--- -> ./movies_rented_mar2022.csv
+-- -> ./res/movies_rented_mar2022.csv
 

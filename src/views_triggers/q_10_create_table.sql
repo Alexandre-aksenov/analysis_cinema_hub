@@ -11,6 +11,6 @@ order by genre
 -- Updated Rows 10
 
 select * from Genre_Statistics;
--- -> res/genre_statistics_init.csv
+-- -> ./res/genre_count.csv
 
 
