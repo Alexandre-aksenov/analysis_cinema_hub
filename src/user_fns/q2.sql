@@ -1,8 +1,10 @@
 -- Fn GetMoviesByDirector: 
--- имя режиссера в качестве 
--- -> таблицу с названием фильма,
--- годом выпуск
--- и жанром для всех фильмов этого режиссера.
+-- director's name
+-- -> 
+-- table of all movies of this director with fields:
+-- movie's title,
+-- release year
+-- genre.
 
 
 create or replace function GetMoviesByDirector_v2
@@ -19,7 +21,8 @@ $$
 		, m.release_year
 		, m.genre
 	from movies	m
-	-- filter on director, this instruction is specific to PostgreSQL
+	-- filter on director, with the cond that the full name in data should contain the argument.
+	-- Note: this syntax is specific to PostgreSQL
 	where position(director_name IN (m.additional_info -> 'director')::text) > 0
 $$;
 
@@ -31,11 +34,13 @@ select * from GetMoviesByDirector_v2(director_name => 'Christopher Nolan');
 -- The Dark Knight
 -- The Prestige
 -- Memento
--- Time: 0.241
 
 select * from GetMoviesByDirector_v2(director_name => '"Christopher Nolan"');
 -- Same 4 movies.
 
+select * from GetMoviesByDirector_v2(director_name => 'Nolan');
+-- Same 4 movies.
+
 -- Ccl. This fn is relatively simple to use,
--- as it can be called without extra quotes.
+-- as the user may give only the family name and may omit quotes.
 
