@@ -43,18 +43,19 @@ INSERT INTO rentals_2 (customer_id, movie_id, rental_date, return_date) values
 -- updated rows 27
 
 
-select * from rentals_2 r; 
+select * from rentals_2 r;
+-- 27 x 5
 
--- create function for this table
-create function GetCustomerStatus_2(customer_id int)
-returns varchar(10) as
+-- create an analogous function for this table
+create or replace function GetCustomerStatus(customer_id int)
+returns varchar(10) 
+language sql as
 $$
 	select
-		-- num_rentals_to_status(count(*)) -- optimization, to call 'count' only once.
 		case when count(*) < 5 then 'Newbie' when count(*) <= 10 then 'Regular' else 'VIP' end
 	from rentals_2 r
-	where r.customer_id = GetCustomerStatus_2.customer_id;
-$$ language sql;
+	where r.customer_id = GetCustomerStatus.customer_id;
+$$;
 
 
 -- test the case 'Newbie'
@@ -63,7 +64,7 @@ from rentals_2 r
 where r.customer_id = 1;
 -- 1
 
-select GetCustomerStatus_2(1) as total_client1;
+select GetCustomerStatus(1) as total_client1;
 -- 'Newbie'
 
 
@@ -73,7 +74,7 @@ from rentals_2 r
 where r.customer_id = 2;
 -- 5
 
-select GetCustomerStatus_2(2) as total_client2;
+select GetCustomerStatus(2) as total_client2;
 -- 'Regular'
 
 
@@ -83,7 +84,7 @@ from rentals_2 r
 where r.customer_id = 3;
 -- 10
 
-select GetCustomerStatus_2(3) as total_client3;
+select GetCustomerStatus(3) as total_client3;
 -- 'Regular'
 
 
@@ -93,7 +94,7 @@ from rentals_2 r
 where r.customer_id = 4;
 -- 11
 
-select GetCustomerStatus_2(4) as total_client4;
+select GetCustomerStatus(4) as total_client4;
 -- 'VIP'
 
 -- All tests went as expected.

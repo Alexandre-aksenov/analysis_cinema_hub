@@ -1,21 +1,26 @@
--- Создайте функцию GetCustomerStatus, 
--- которая принимает customer_id и возвращает статус клиента в зависимости от количества аренд.
+-- Fn GetCustomerStatus:
+-- customer_id 
+-- ->
+-- client's status as function of the number of rentals.
 
 drop function if exists GetCustomerStatus(int);
 
 
-create function GetCustomerStatus(customer_id int)
-returns varchar(10) as
+create or replace function GetCustomerStatus(customer_id int)
+returns varchar(10) 
+language sql as
 $$
 	select
-		-- num_rentals_to_status(count(*)) -- optimization, to call 'count' only once.
 		case when count(*) < 5 then 'Newbie' when count(*) <= 10 then 'Regular' else 'VIP' end
 	from rentals r
 	where r.customer_id = GetCustomerStatus.customer_id;
-$$ language sql;
+$$;
 
 
 -- test for client 2 in the current data
-select GetCustomerStatus(2) as total_client2;
+select GetCustomerStatus(customer_id => 2) as total_client2;
 -- Newbie , as expected.
+
+-- A more complete test (with different numbers of rentals) is located in the script 
+-- test_q4.sql
 
