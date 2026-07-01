@@ -6,8 +6,13 @@
 -- release year
 -- genre.
 
+-- Added feature: this function does not require the full name,
+-- but can process just a part of it.
+-- Current limitation: if the names of several directors contain the given string,
+-- the movies of all of them are expected to appear together in the output.
 
-create or replace function GetMoviesByDirector_v2
+
+create or replace function GetMoviesByDirector
 (director_name text)
 returns table (
 	title VARCHAR(255),
@@ -27,18 +32,19 @@ $$
 $$;
 
 
--- tests
-select * from GetMoviesByDirector_v2(director_name => 'Christopher Nolan');
+-- Tests.
+
+select * from GetMoviesByDirector(director_name => 'Christopher Nolan');
 -- 4x3
 -- Inception
 -- The Dark Knight
 -- The Prestige
 -- Memento
 
-select * from GetMoviesByDirector_v2(director_name => '"Christopher Nolan"');
+select * from GetMoviesByDirector(director_name => '"Christopher Nolan"');
 -- Same 4 movies.
 
-select * from GetMoviesByDirector_v2(director_name => 'Nolan');
+select * from GetMoviesByDirector(director_name => 'Nolan');
 -- Same 4 movies.
 
 -- Ccl. This fn is relatively simple to use,
