@@ -14,8 +14,10 @@ CREATE TABLE movies_2 (
 INSERT INTO movies_2 (genre) VALUES
 ('Sci-Fi'),
 ('Action'),
-('Action')
+('Sci-Fi')
 ;
+-- Most popular genre in terms of number of movies: Sci-Fi
+
 
 CREATE TABLE rentals_2 (
     movie_id INT REFERENCES movies_2(movie_id)
@@ -28,8 +30,10 @@ INSERT INTO rentals_2 (movie_id) VALUES
 (2),
 (2)
 ;
+-- Most popular genre in terms of number of rentals: Action
 
--- Tests
+
+-- Test the query
 select 
 	m.genre
 from movies_2 m 
@@ -39,7 +43,7 @@ order by count(*) desc
 limit 1;
 -- "Action" as expected
 
--- fn
+-- Test it wrapped into fn
 create or replace function GetMostPopularGenre_2()
 returns text
 language sql

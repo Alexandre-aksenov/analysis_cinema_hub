@@ -1,7 +1,12 @@
--- Fn GetMostPopularGenre, которая возвращает жанр, 
--- по которому арендовали больше всего фильмов
+-- Fn GetMostPopularGenre:
+-- (no input) -> the genre with most rentals.
+
+-- This solution is based on Q4 from ./main2.sql ,
+-- but the logic is optimized and adapted to a single output string
+
 
 drop function if exists GetMostPopularGenre();
+drop function if exists GetMostPopularGenre_v2();
 
 /*
  -- query from homework 4.
@@ -25,6 +30,7 @@ limit 1
 -- T=0.420
 */
 
+/*
 -- double CTE. this can be optimized
 create function GetMostPopularGenre
 ( out genre text) AS
@@ -65,9 +71,10 @@ order by count(*) desc
 limit 1
 ;
 -- time: 361
+*/
 
 -- faster fn
-create or replace function GetMostPopularGenre_v2()
+create or replace function GetMostPopularGenre()
 returns text
 language sql
 AS
@@ -82,6 +89,13 @@ $$
 $$;
 
 -- test
-select GetMostPopularGenre_v2() as most_popular;
+select GetMostPopularGenre() as most_popular;
 -- most_popular=Animation
+
+-- For testing that the answer is indeed based on rentals,
+-- a second test on data, where the movies and rentals
+-- lead to different answers,
+-- is in the script ./test_q5.sql .
+
+
 
