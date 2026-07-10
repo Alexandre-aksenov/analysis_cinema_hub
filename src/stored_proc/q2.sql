@@ -1,10 +1,14 @@
--- Хранимая процедура, которая принимает customer_id и возвращает:
--- количество фильмов, которые этот клиент арендовал, а также сумму всех аренд (общее количество записей).
--- Calls the table: rentals ; customers (for check of existence).
+-- Stored procedure:
+-- Input:  customer_id 
+-- ->
+-- number of movies, rented by this client, а также сумму всех аренд (общее количество записей).
+-- total number of rentals.
 
--- Interpretation of the two outputs. If the client rented the same movie twice,
--- this contributes as +1 for the number of movies, but +2 for the num of rentals.
--- Added feauture in this solution: raise an exception if the ID does not exist.
+-- Calls the tables: rentals ; customers (for check of existence).
+
+-- Interpretation of the outputs in this solution. If the client rented the same movie twice,
+-- this contributes as +1 to num of movies, but +2 to the num of rentals.
+-- Added feauture in this solution: raise an exception if the client does not exist.
 create or replace procedure GetCustomerRentalCount(
 	p_id	 	int,
 	out_movies	out int,
@@ -43,14 +47,6 @@ begin
 end
 $$;
 
--- -- --
--- (test of query)
-SELECT
-	COUNT(distinct r.movie_id)
-FROM rentals r
-WHERE r.customer_id = 2
-;
-
 
 -- -- --
 
@@ -67,8 +63,7 @@ declare
 	proc_rentals int;
 begin
 	call GetCustomerRentalCount(fn_id, proc_movies, proc_rentals);
-	raise notice 'The customer with (id=%) rented % different movies, with % total rentals.', fn_id, proc_movies, proc_rentals;
-  	-- The fn returns void
+	raise notice 'The customer with (id=%) rented % different movie(s), with % total rental(s).', fn_id, proc_movies, proc_rentals;
   	return;
 end
 $$;

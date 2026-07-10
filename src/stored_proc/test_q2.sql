@@ -1,3 +1,6 @@
+-- Test the procedure on a small table, 
+-- where a movie has been rented twice by the same client.
+
 DROP TABLE if exists rentals_2;
 DROP PROCEDURE if exists GetCustomerRentalCount_2;
 DROP FUNCTION if exists fn_GetCustomerRentalCount_2(int);
@@ -67,7 +70,7 @@ declare
 	proc_rentals int;
 begin
 	call GetCustomerRentalCount_2(fn_id, proc_movies, proc_rentals);
-	raise notice 'The customer with (id=%) rented % different movies, with % total rentals.', fn_id, proc_movies, proc_rentals;
+	raise notice 'The customer with (id=%) rented % different movie(s), with % total rental(s).', fn_id, proc_movies, proc_rentals;
   	-- The fn returns void
   	return;
 end
@@ -76,6 +79,6 @@ $$;
 
 
 select * from fn_GetCustomerRentalCount_2(fn_id => 1);
--- The customer with (id=1) rented 2 different movies, with 3 total rentals.
+-- The customer with (id=1) rented 2 different movie(s), with 3 total rental(s).
 
 
