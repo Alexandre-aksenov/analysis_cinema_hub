@@ -1,6 +1,8 @@
--- 1. хранимая процедура ,
--- которая добавляет новый фильм в таблицу 'movies', но только если фильма с таким названием и годом выпуска еще нет в базе данных.
-
+-- Stored procedure:
+-- data of a new movie
+-- ->
+-- if the table 'movies' contains no movie with the given name and release date, add the movie,
+-- otherwize raise exception.
 create or replace procedure AddNewMovie(
 	p_title VARCHAR(255),
     p_release_year INT default NULL,
