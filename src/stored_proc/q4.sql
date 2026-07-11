@@ -1,7 +1,12 @@
 -- Stored procedure DeleteCustomerWithLog :
 -- Input: customer_id (interpretation of this solution)
 -- ->
--- удаляет клиента из таблицы customers, а информацию об удалении (ID клиента, email, дата удаления) записывает в лог-таблицу Customer_Deletion_Log
+-- if the customer exists:
+--   removes the customer from table 'customers',
+--   adds information about this event (ID клиента, email, deletion date) to the table of logs Customer_Deletion_Log;
+-- else:
+--   raises exception
+
 
 -- table for logs
 drop table if exists Customer_Deletion_Log;
@@ -25,7 +30,7 @@ declare
   	v_id int;
 	v_email VARCHAR(255);
 begin
-	-- check the given id exists among customers
+	-- extract info using id exists among customers
 	SELECT
 		c.customer_id,
 		c.email
@@ -33,7 +38,7 @@ begin
 	FROM customers c
 	WHERE c.customer_id = DeleteCustomerWithLog.customer_id;
 
-	-- decision on the route
+	-- check whether the customer exists
 	if v_id is null then
 		raise exception 'No customer with id=% could be found.', customer_id;
 	else
