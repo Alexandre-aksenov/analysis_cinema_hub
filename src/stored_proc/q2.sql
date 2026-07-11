@@ -1,8 +1,12 @@
 -- Stored procedure:
--- Input:  customer_id 
+-- Input: customer_id 
 -- ->
--- number of movies, rented by this client, а также сумму всех аренд (общее количество записей).
--- total number of rentals.
+-- if the customer exists in table 'customers':
+--   returns the number of movies, rented by this client,
+--   and the total number of rentals,
+-- else:
+--   raise exception.
+
 
 -- Calls the tables: rentals ; customers (for check of existence).
 
