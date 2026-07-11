@@ -22,7 +22,8 @@ INSERT INTO movies_3 (movie_id, title, release_year, genre, rating, duration, de
 select * from movies_3;
 -- 2 movies with ratings 8.8, 9
 
--- create analogous procedure
+
+-- create analogous procedure, which acts on the table 'movies_3' instead of 'movies'.
 create or replace procedure UpdateMovieRating_3(
 	movie_id int,
 	new_rating DECIMAL(2,1)
@@ -32,19 +33,20 @@ as $$
 declare
   	id_exists int;
 begin
+	-- check the new rating is valid
+	if (new_rating < 0) or (new_rating > 10) then
+		raise exception 'The new rating = % is invalid.', new_rating;
+	end if;
+
 	-- check the id exists
 	SELECT COUNT(*)
 	INTO id_exists
 	FROM movies_3 m
 	WHERE m.movie_id = UpdateMovieRating_3.movie_id
 	;
+
 	if id_exists = 0 then
 		raise exception 'No movie with id=% could be found.', movie_id;
-	end if;
-
-	-- check the new rating is valid
-	if (new_rating < 0) or (new_rating > 10) then
-		raise exception 'The new rating=% is invalid.', new_rating;
 	end if;
 	
 	-- update the rating
@@ -56,9 +58,8 @@ $$;
 
 -- tests
 -- try to assign rating 20 ,
-call UpdateMovieRating_3(2, 20.0);
--- ERROR (expected): The new rating=20.0 is invalid.
-
+call UpdateMovieRating_3(2, 10.5);
+-- ERROR (expected): The new rating = 10.5 is invalid.
 
 -- try to assign rating 9.5 to an inexisting movie 5
 call UpdateMovieRating_3(5, 9.5);
