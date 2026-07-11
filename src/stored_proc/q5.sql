@@ -1,7 +1,10 @@
--- Stored procedure, которая  рассчитывает общую выручку от аренды фильмов для указанного клиента.
+-- Stored procedure, which computes the total amount spent by a client, by cliing the procedure in Q2.
 -- Input: customer_id, unit_price (added optional parameter)
 -- ->
--- print the total cost for this client.
+-- if the customer exists in table 'customers':
+--   print the total amount spent by this client,
+-- else:
+--   raise exception.
 create or replace procedure CalculateRentalRevenue(
 	customer_id int,
 	unit_price float default 5.0
@@ -23,5 +26,9 @@ end
 $$;
 
 -- test
+-- nonexisting client
+call CalculateRentalRevenue(100);
+-- ERROR (expected): No customer with id=100 could be found.
+
 call CalculateRentalRevenue(2);
 -- The customer with id=2 spent 5 on renting movies.
