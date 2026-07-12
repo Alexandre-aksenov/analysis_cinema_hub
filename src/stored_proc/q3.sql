@@ -1,3 +1,26 @@
+-- Attempts to convert the input to DECIMAL(2,1),
+-- returns -1 if input is out of range.
+-- In terms of specific constants:
+-- if  0.0 <= input < 9.95: 
+--   returns input converted to  DECIMAL(2,1)
+-- else:
+--   returns -1.
+create or replace function Attempt_convert_to_decimal21(
+	input float
+)
+returns DECIMAL(2,1)
+language plpgsql as
+$$
+declare
+begin
+	return input::DECIMAL(2,1);
+	exception
+    when numeric_value_out_of_range then
+		return -1::DECIMAL(2,1); -- -1 encodes an input out of bounds
+end;
+$$;
+
+
 -- Stored procedure 'UpdateMovieRating', which updates the movie's rating.
 -- Input: movie_id, new_rating
 -- ->
@@ -6,9 +29,8 @@
 -- else:
 --   raises exception.
 
--- The upper bound 9.95 for the new rating is the upper bound of floating-point constants, which,
--- after rounding to one decimal place after the dot, produce a number strictly smaller than 10
--- (therefore convertible to the type DECIMAL(2,1) ).
+-- The upper bound 9.95 for the new rating guarantees the possibility to
+-- convert to the type DECIMAL(2,1) .
 -- As for the lower bound, this procedure rejects any negative input.
 
 
@@ -20,11 +42,10 @@ create or replace procedure UpdateMovieRating(
 language plpgsql
 as $$
 declare
-  	-- id_exists int;
 	id_exists boolean;
 begin
 	-- check the new rating is valid
-	if (new_rating < 0) or (new_rating >= 9.95) then
+	if Attempt_convert_to_decimal21(new_rating) < 0 then
 		raise exception 'The new rating = % is invalid.', new_rating;
 	end if;
 

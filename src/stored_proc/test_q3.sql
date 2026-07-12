@@ -2,6 +2,10 @@
 drop table if exists movies_3;
 drop procedure if exists UpdateMovieRating_3; 
 
+
+
+
+
 CREATE TABLE movies_3 (
     movie_id smallint PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
@@ -34,7 +38,8 @@ declare
     id_exists boolean;
 begin
     -- check the new rating is valid
-	if (new_rating < 0) or (new_rating >= 9.95) then
+	-- if (new_rating < 0) or (new_rating >= 9.95) then
+	if Attempt_convert_to_decimal21(new_rating) < 0 then
         raise exception 'The new rating = % is invalid.', new_rating;
     end if;
 
