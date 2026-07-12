@@ -38,7 +38,6 @@ declare
     id_exists boolean;
 begin
     -- check the new rating is valid
-	-- if (new_rating < 0) or (new_rating >= 9.95) then
 	if Attempt_convert_to_decimal21(new_rating) < 0 then
         raise exception 'The new rating = % is invalid.', new_rating;
     end if;
