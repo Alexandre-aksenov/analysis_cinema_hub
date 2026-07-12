@@ -14,21 +14,22 @@ create or replace procedure UpdateMovieRating(
 language plpgsql
 as $$
 declare
-  	id_exists int;
+  	-- id_exists int;
+	id_exists boolean;
 begin
 	-- check the new rating is valid
-	if (new_rating < 0) or (new_rating > 10) then
+	if (new_rating < 0) or (new_rating >= 9.95) then
 		raise exception 'The new rating = % is invalid.', new_rating;
 	end if;
 
 	-- check the id exists. This syntax relies on the fact m.movie_id is the unique primary key. 
-	SELECT COUNT(*)
-	INTO id_exists
-	FROM movies m
-	WHERE m.movie_id = UpdateMovieRating.movie_id
-	;
+	id_exists := (EXISTS 
+	(COUNT(*)
+		FROM movies m
+		WHERE m.movie_id = UpdateMovieRating.movie_id
+	));
 
-	if id_exists = 0 then
+	if NOT id_exists then
 		raise exception 'No movie with id=% could be found.', movie_id;
 	end if;
 
@@ -39,4 +40,4 @@ begin
 end;
 $$;
 
--- test in a testing table -> ./test_q3.sql
+-- test in a small table -> ./test_q3.sql

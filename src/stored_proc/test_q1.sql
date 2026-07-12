@@ -27,27 +27,26 @@ create or replace procedure AddNewMovie_2(
 language plpgsql
 as $$
 declare
-	r_existing_movie record;
+	movie_exists boolean; 
 BEGIN
 	-- test whether a new movie is being added
-	for r_existing_movie in
+	movie_exists := (EXISTS (
 		SElECT
 			m.title,
 			m.release_year
 		FROM movies_2 m
-		where m.title = p_title AND m.release_year = p_release_year
-  	loop
-		-- Exception if the movie already exists
+		where m.title = p_title AND m.release_year = p_release_year	
+	));
+
+	if movie_exists  then
 		raise exception 'AddNewMovie_2: the movie % already exists', p_title;
-	end loop
-	;
+	end if;
 
 	-- insert the movie
 	insert into movies_2 (title, release_year, genre, rating, duration, description, additional_info) VALUES
 	(p_title, p_release_year, p_genre, p_rating, p_duration, p_description, p_additional_info);
 END;
 $$;
--- Updated Rows: 0
 
 -- try to add an existing movie
 call AddNewMovie_2(p_title => 'Inception', p_release_year => 2010, p_genre => 'Sci-Fi');
@@ -57,7 +56,7 @@ SELECT * FROM movies_2;
 -- 2 movies (inserted at the beginning of the script)
 
 
--- add an existing title with a new year
+-- add an existing title with a new release year
 call AddNewMovie_2(p_title => 'Inception', p_release_year => 2020, p_genre => 'Sci-Fi');
 -- Updated Rows: -1
 

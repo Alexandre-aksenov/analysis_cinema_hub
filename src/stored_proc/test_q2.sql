@@ -1,4 +1,4 @@
--- Test the procedure on a small table, 
+-- Test the procedure 'GetCustomerRentalCount_v2' on a small table, 
 -- where a movie has been rented twice by the same client.
 
 DROP TABLE if exists rentals_2;
@@ -27,15 +27,15 @@ create or replace procedure GetCustomerRentalCount_2(
 language plpgsql
 as $$
 declare
-  	id_exists int;
+	id_exists boolean;
 begin
-	-- check  ID exisis
-	SELECT COUNT(*)
-	INTO id_exists
-	FROM customers c
-	WHERE c.customer_id = p_id
-	;
-	if id_exists = 0 then
+	-- check  ID exists
+	id_exists := (EXISTS (
+		SELECT * FROM  customers c
+		WHERE c.customer_id = p_id	
+	));
+
+	if not id_exists  then
 		raise exception 'No customer with id=% could be found.', p_id;
 	end if;
 
@@ -80,5 +80,3 @@ $$;
 
 select * from fn_GetCustomerRentalCount_2(fn_id => 1);
 -- The customer with (id=1) rented 2 different movie(s), with 3 total rental(s).
-
-
