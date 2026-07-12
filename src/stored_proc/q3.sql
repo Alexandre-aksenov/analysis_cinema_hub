@@ -1,10 +1,16 @@
 -- Stored procedure 'UpdateMovieRating', which updates the movie's rating.
 -- Input: movie_id, new_rating
 -- ->
--- If the movie exists and new rating is between 0.0 and 10.0: 
+-- If the movie exists and 0.0 <= new rating < 9.95: 
 --   updates the rating
 -- else:
 --   raises exception.
+
+-- The upper bound 9.95 for the new rating is the upper bound of floating-point constants, which,
+-- after rounding to one decimal place after the dot, produce a number strictly smaller than 10
+-- (therefore convertible to the type DECIMAL(2,1) ).
+-- As for the lower bound, this procedure rejects any negative input.
+
 
 -- Updates TABLE movies .
 create or replace procedure UpdateMovieRating(
@@ -33,7 +39,6 @@ begin
 		raise exception 'No movie with id=% could be found.', movie_id;
 	end if;
 
-	
 	-- update the rating
 	UPDATE movies m SET rating = new_rating
 	WHERE  m.movie_id = UpdateMovieRating.movie_id;
