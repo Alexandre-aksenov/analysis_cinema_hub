@@ -21,17 +21,9 @@ create or replace procedure GetCustomerRentalCount_v2(
 language plpgsql
 as $$
 declare
-  	-- id_exists int;
 	id_exists boolean;
 begin
-	-- check  ID exisis -- -> EXISTS, see: https://blog.jooq.org/dont-even-use-count-for-primary-key-existence-checks/
-	/*
-	SELECT COUNT(*)
-	INTO id_exists
-	FROM customers c
-	WHERE c.customer_id = p_id
-	;
-	*/ -- ->
+	-- check  ID exisis 
 	id_exists := (EXISTS (
 		SELECT *
 		FROM  customers c
