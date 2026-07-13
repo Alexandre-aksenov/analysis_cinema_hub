@@ -19,6 +19,7 @@ begin
 		return -1::DECIMAL(2,1); -- -1 encodes an input out of bounds
 end;
 $$;
+-- Test of the fn: see ./test_attempt_convert_decimal.sql
 
 
 -- Stored procedure 'UpdateMovieRating', which updates the movie's rating.
