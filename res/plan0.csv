@@ -1,0 +1,23 @@
+"QUERY PLAN"
+Limit  (cost=51.09..51.09 rows=1 width=964) (actual time=0.258..0.262 rows=5 loops=1)
+  ->  Sort  (cost=51.09..51.09 rows=1 width=964) (actual time=0.255..0.258 rows=5 loops=1)
+"        Sort Key: (count(rentals.rental_id)) DESC, (max(rentals.rental_date)) DESC"
+        Sort Method: quicksort  Memory: 25kB
+        ->  GroupAggregate  (cost=51.05..51.08 rows=1 width=964) (actual time=0.232..0.241 rows=5 loops=1)
+"              Group Key: customers.first_name, customers.last_name, movies.title"
+              ->  Sort  (cost=51.05..51.06 rows=1 width=960) (actual time=0.216..0.218 rows=5 loops=1)
+"                    Sort Key: customers.first_name, customers.last_name, movies.title"
+                    Sort Method: quicksort  Memory: 25kB
+                    ->  Nested Loop  (cost=0.14..51.04 rows=1 width=960) (actual time=0.067..0.188 rows=5 loops=1)
+                          ->  Nested Loop  (cost=0.00..46.73 rows=1 width=528) (actual time=0.044..0.145 rows=5 loops=1)
+                                Join Filter: (movies.movie_id = rentals.movie_id)
+                                Rows Removed by Join Filter: 145
+                                ->  Seq Scan on movies  (cost=0.00..11.12 rows=1 width=520) (actual time=0.031..0.041 rows=5 loops=1)
+                                      Filter: ((genre)::text = 'Action'::text)
+                                      Rows Removed by Filter: 25
+                                ->  Seq Scan on rentals  (cost=0.00..35.50 rows=8 width=16) (actual time=0.003..0.015 rows=30 loops=5)
+                                      Filter: ((rental_date >= '2021-01-01'::date) AND (rental_date <= '2022-12-31'::date))
+                          ->  Index Scan using customers_pkey on customers  (cost=0.14..4.16 rows=1 width=440) (actual time=0.006..0.006 rows=1 loops=5)
+                                Index Cond: (customer_id = rentals.customer_id)
+Planning Time: 0.637 ms
+Execution Time: 0.386 ms
